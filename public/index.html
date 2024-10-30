@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista de Usuarios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    table,
+    th,
+    td {
+      border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+
+    .center {
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Lista de Usuarios</h1>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Fecha de Creación</th>
+      </tr>
+    </thead>
+    <tbody id="users-table-body">
+      <!-- Aquí se insertarán los datos dinámicamente -->
+    </tbody>
+  </table>
+
+  <script>
+    async function fetchUsers() {
+      try {
+        // Realiza la solicitud a la API para obtener los datos de los usuarios
+        const response = await fetch('http://localhost:3000/users');
+
+        // Verifica si la respuesta fue exitosa
+        if (!response.ok) {
+          throw new Error('Error al obtener los usuarios');
+        }
+
+        // Convierte la respuesta en JSON
+        const users = await response.json();
+
+        // Obtiene el cuerpo de la tabla donde se van a mostrar los usuarios
+        const tableBody = document.getElementById('users-table-body');
+
+        // Limpia la tabla antes de agregar los datos
+        tableBody.innerHTML = '';
+
+        // Recorre los datos de los usuarios y agrega una fila por cada uno
+        users.forEach(user => {
+          const row = `
+            <tr>
+              <td>${user.id}</td>
+              <td>${user.name}</td>
+              <td>${user.email}</td>
+              <td>${new Date(user.createdAt).toLocaleString()}</td>
+            </tr>
+          `;
+          tableBody.innerHTML += row;
+        });
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    }
+
+    // Llama a la función para obtener los usuarios al cargar la página
+    fetchUsers();
+  </script>
+</body>
+
+</html>
